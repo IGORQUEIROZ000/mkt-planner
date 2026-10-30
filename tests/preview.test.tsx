@@ -1,0 +1,20 @@
+import React from 'react';
+import {it,expect} from 'vitest';
+import {render,screen,fireEvent} from '@testing-library/react';
+import {ImportPreview} from '../src/ImportPreview';
+import {db,blank,parseImport} from '../src/data';
+it('bloqueia a edição durante a validação temporária sem alterar o original',async()=>{
+ await db.contents.clear();await db.materials.clear();await db.settings.clear();
+ const source=parseImport(JSON.stringify({kind:'mkt-editorial',version:1,contents:[{...blank(),title:'Revisão'}]}));
+ render(<ImportPreview source={source} existing={[]} onDone={()=>{}} onError={s=>{throw Error(s);}}/>);
+ fireEvent.change(screen.getByLabelText('Checklist da prévia'),{target:{value:'[ ] Primeiro\n'}});
+ expect(screen.getByLabelText('Checklist da prévia')).toHaveValue('[ ] Primeiro\n');
+ fireEvent.change(screen.getByLabelText('Checklist da prévia'),{target:{value:'[ ] Primeiro\n[x] Segundo'}});
+ fireEvent.change(screen.getByLabelText('IDs de anexos da prévia'),{target:{value:'foto,'}});
+ expect(screen.getByLabelText('IDs de anexos da prévia')).toHaveValue('foto,');
+ fireEvent.change(screen.getByLabelText('IDs de anexos da prévia'),{target:{value:''}});
+ fireEvent.click(screen.getByRole('button',{name:'Validar resultado em banco temporário'}));
+ expect(screen.getByLabelText('Título da prévia')).toBeDisabled();
+ await screen.findByText(/Validação temporária concluída/);
+ expect(screen.getByLabelText('Título da prévia')).toBeEnabled();expect(await db.contents.count()).toBe(0);
+});
