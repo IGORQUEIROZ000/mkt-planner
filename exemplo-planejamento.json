@@ -1,0 +1,20 @@
+{
+  "kind": "mkt-editorial",
+  "version": 1,
+  "contents": [
+    {
+      "id": "exemplo-reel-001",
+      "title": "Exemplo editável: apresentação de imóvel",
+      "date": "",
+      "format": "Reels",
+      "status": "Ideia",
+      "script": "Preencha aqui as cenas e falas aprovadas para seu imóvel.",
+      "editing": "Inclua as instruções de edição específicas do planejamento.",
+      "caption": "",
+      "hashtags": "",
+      "checklist": [{ "text": "Revisar dados e autorização de uso das imagens", "done": false }],
+      "results": "",
+      "history": []
+    }
+  ]
+}
